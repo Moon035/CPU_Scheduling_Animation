@@ -1,33 +1,30 @@
 import React from "react";
 
-function Header({ scrollToSection}) {
+function Header({ scrollToSection }) {
+    const buttons = ["FIFO", "SJF", "STCF", "RR", "MLFQ"]; 
+
     return (
         <header style={styles.header}>
-
             <div style={styles.authorInfo}>
-                    <p>Sejun Moon (A279G723)</p>
+                <p>Sejun Moon (A279G723)</p>
             </div>
-
 
             <h1 style={styles.title}>CPU Scheduler</h1>
 
-
-            
             <nav style={styles.nav}>
-                <button style={styles.button} onClick={() => scrollToSection("FIFO")}>FIFO</button>
-                <button style={styles.button} onClick={() => scrollToSection("SJF")}>SJF</button>
-                <button style={styles.button} onClick={() => scrollToSection("STCF")}>STCF</button>
-                <button style={styles.button} onClick={() => scrollToSection("RR")}>RR</button>
-                <button style={styles.button} onClick={() => scrollToSection("MLFQ")}>MLFQ</button>
+                {buttons.map((button) => (
+                    <button
+                        key={button}
+                        style={styles.button}
+                        onClick={() => scrollToSection(button)}
+                    >
+                        {button}
+                    </button>
+                ))}
             </nav>
-            
-
-
         </header>
     );
 }
-
-
 
 const styles = {
     header: {
@@ -39,7 +36,6 @@ const styles = {
         width: "100%",
         top: 0,
         zIndex: 1000,
-        textAlign: "center",
     },
 
     title: {
@@ -52,7 +48,7 @@ const styles = {
         position: "absolute",
         right: "40px",
         top: "10px",
-        color: "ccc",
+        color: "#ccc",
         maxWidth: "150px",
         overflow: "hidden",
         whiteSpace: "nowrap",
@@ -77,13 +73,6 @@ const styles = {
         transition: "background 0.3s ease",
         minWidth: "100px",
     },
-
-    buttonHover: {
-        background: "#0056b3",
-    },
 };
 
-
 export default Header;
-
-
