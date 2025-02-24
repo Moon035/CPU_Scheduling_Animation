@@ -38,7 +38,7 @@ function App() {
     // Mapping Simulators to each algorithm
     const simulators = {
         FIFO: FIFOSimulator,
-        //SJF: SJFSimulator,
+        SJF: SJFSimulator,
         //STCF: STCFSimulator, 
         //RR: RRSimulator,   
         //MLFQ: MLFQSimulator, 
