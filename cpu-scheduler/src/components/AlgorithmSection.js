@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import Simulator from './Simulator';
 
 
-function AlgorithmSection({ id, title, description }) {
+//Define AlgorithmSection Component
+function AlgorithmSection({ id, title, description, SimulatorComponent }) {
+
 
     const [showSimulation, setShowSimulation] = useState(false);
 
@@ -13,26 +14,25 @@ function AlgorithmSection({ id, title, description }) {
             <p>{description}</p>
 
 
+            {/* Decorate button */}
             <button 
                 style={styles.simulationButton}
-                onClick ={() => setShowSimulation(!showSimulation)}
+                onClick={() => setShowSimulation(!showSimulation)}
                 onMouseEnter={(e) => e.target.style.background = styles.buttonHover.background}
                 onMouseLeave={(e) => e.target.style.background = styles.simulationButton.background}
                 onMouseDown={(e) => e.target.style.transform = styles.buttonActive.transform}
                 onMouseUp={(e) => e.target.style.transform = "scale(1)"}
             >
+
                 {showSimulation ? "Hide Simulation" : "Show Simulation"}
             </button>
 
-            {/* Start Simulation*/}
-            {showSimulation && <Simulator algorithm={id} />}
 
+            {/* Display the simulator when the button is clicked */}
+            {showSimulation && SimulatorComponent && <SimulatorComponent />}
         </section>
     );
 }
-
-
-
 
 const styles = {
     section: {
