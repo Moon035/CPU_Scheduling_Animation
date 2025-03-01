@@ -5,7 +5,7 @@ import PieChart from "./PieChart";
 
 const ChartContainer = ({ processes, executionProgress }) => {
 
-    const sortedProcesses = [...processes].sort((a,b) => a.id.localeCompare(b.id));
+    const sortedProcesses = [...processes].sort((a,b) => a.arrival - b.arrival);
 
     return (
         <div style={styles.container}>

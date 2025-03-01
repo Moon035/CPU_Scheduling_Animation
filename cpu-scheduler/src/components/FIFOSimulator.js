@@ -113,7 +113,7 @@ const FIFOSimulator = () => {
                     clearInterval(interval);
                     executeProcess(index + 1);
                 }
-            }, 1000);
+            }, 500);
         };
 
         executeProcess(0);

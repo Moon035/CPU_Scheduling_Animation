@@ -10,10 +10,8 @@ const RoundRobinSimulator = () => {
     const [timeQuantum, setTimeQuantum] = useState(2);
     const [processes, setProcesses] = useState([]);
 
-
     const colorMap = useRef({});
     const availableColors = ["red", "blue", "green", "orange", "purple", "cyan", "pink", "brown", "lime", "magenta"];
-
 
     const getColorForProcess = (id) => {
         if (!colorMap.current[id]) {
@@ -22,7 +20,7 @@ const RoundRobinSimulator = () => {
         return colorMap.current[id];
     };
 
-    // Generate processes randomly
+    // 🔥 랜덤 프로세스 생성
     const generateRandomProcesses = (count) => {
         let newProcesses = Array.from({ length: count }, (_, i) => {
             const processId = `P${i + 1}`;
@@ -35,24 +33,23 @@ const RoundRobinSimulator = () => {
             };
         });
 
-        // Sort in order to arrival time
+        // 도착 시간 기준 정렬
         newProcesses = newProcesses.sort((a, b) => a.arrival - b.arrival);
 
-        // Initialize burstTime 저장
+        // 초기 burstTime 저장
         newProcesses = newProcesses.map((p) => ({ ...p, initialBurst: p.burstTime }));
 
         setProcesses(newProcesses);
     };
 
-
-
+    // 🔥 Round Robin 실행 큐 생성 (도착 순서 기준)
     const generateExecutionQueue = (processes, timeQuantum) => {
         let queue = [];
         let remainingBursts = processes.map((p) => ({
             id: p.id,
             burstTime: p.burstTime,
         }));
-    
+
         while (remainingBursts.some((p) => p.burstTime > 0)) {
             for (let i = 0; i < processes.length; i++) {
                 let process = remainingBursts[i];
@@ -64,20 +61,11 @@ const RoundRobinSimulator = () => {
                 }
             }
         }
-    
+
         return queue;
     };
-    
 
-
-
-
-
-
-
-
-
-    // Start RR simulation
+    // 🔥 시뮬레이션 시작
     const startSimulation = () => {
         if (isRunning) return;
         setIsRunning(true);
@@ -86,11 +74,12 @@ const RoundRobinSimulator = () => {
         runRoundRobin();
     };
 
+    // 🔥 Round Robin 알고리즘 실행
     const runRoundRobin = () => {
         let queue = generateExecutionQueue(processes, timeQuantum);
         let totalBurst = processes.reduce((acc, p) => acc + p.burstTime, 0);
         let executedTime = 0;
-    
+
         const executeProcess = () => {
             if (queue.length === 0) {
                 setIsRunning(false);
@@ -100,34 +89,34 @@ const RoundRobinSimulator = () => {
                 }, 500);
                 return;
             }
-    
+
             let process = queue.shift();
             let executionTime = process.executionTime;
             let burstLeft = process.burstTime - executionTime;
-    
+
             const interval = setInterval(() => {
                 if (executionTime > 0) {
                     setCurrentTime((prev) => prev + 1);
-                    executionTime--;
                     executedTime++;
-    
+
                     setExecutionProgress((executedTime / totalBurst) * 100);
-    
+
                     setProcesses((prevProcesses) =>
                         prevProcesses.map((p) =>
-                            p.id === process.id ? { ...p, burstTime: burstLeft } : p
+                            p.id === process.id ? { ...p, burstTime: p.burstTime - 1 } : p
                         )
                     );
+
+                    executionTime--;
                 } else {
                     clearInterval(interval);
                     executeProcess();
                 }
-            }, 1000);
+            }, 500); // 🔥 실행 속도를 0.5초로 변경 (애니메이션 효과)
         };
-    
+
         executeProcess();
     };
-    
 
     return (
         <div style={styles.container}>
