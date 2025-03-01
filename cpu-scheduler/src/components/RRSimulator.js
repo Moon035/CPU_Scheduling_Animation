@@ -20,7 +20,7 @@ const RoundRobinSimulator = () => {
         return colorMap.current[id];
     };
 
-    // 🔥 랜덤 프로세스 생성
+    // Generate random process
     const generateRandomProcesses = (count) => {
         let newProcesses = Array.from({ length: count }, (_, i) => {
             const processId = `P${i + 1}`;
@@ -33,30 +33,48 @@ const RoundRobinSimulator = () => {
             };
         });
 
-        // 도착 시간 기준 정렬
+        // Align process in arrival order
         newProcesses = newProcesses.sort((a, b) => a.arrival - b.arrival);
 
-        // 초기 burstTime 저장
+        // Save initial burstTime
         newProcesses = newProcesses.map((p) => ({ ...p, initialBurst: p.burstTime }));
 
         setProcesses(newProcesses);
     };
 
-    // 🔥 Round Robin 실행 큐 생성 (도착 순서 기준)
+    //Create a queue for execution list (in arrival order).     We need processes and quantum
     const generateExecutionQueue = (processes, timeQuantum) => {
+
+        //Create an empty queue
         let queue = [];
+
+        //Save the remaining running time of each process
         let remainingBursts = processes.map((p) => ({
             id: p.id,
             burstTime: p.burstTime,
         }));
 
+
+
+        //Runs until the remaining time of the process becomes 0
         while (remainingBursts.some((p) => p.burstTime > 0)) {
+
+            //Runs all processes
             for (let i = 0; i < processes.length; i++) {
                 let process = remainingBursts[i];
 
+                //If it's a process that still has time to run
                 if (process.burstTime > 0) {
+
+                    //Decide how many times to run
+                    //execute by the timeQuantime
+                    //If the remaining burstTime is less then quantum, run only by that amount
                     let executionTime = Math.min(timeQuantum, process.burstTime);
+
+                    //add processes to execute into queue
                     queue.push({ ...process, executionTime });
+
+                    //Update remaining runtime
                     process.burstTime -= executionTime;
                 }
             }
@@ -65,7 +83,7 @@ const RoundRobinSimulator = () => {
         return queue;
     };
 
-    // 🔥 시뮬레이션 시작
+    // Start Simulation
     const startSimulation = () => {
         if (isRunning) return;
         setIsRunning(true);
@@ -74,7 +92,7 @@ const RoundRobinSimulator = () => {
         runRoundRobin();
     };
 
-    // 🔥 Round Robin 알고리즘 실행
+    // Run RR Scheduling
     const runRoundRobin = () => {
         let queue = generateExecutionQueue(processes, timeQuantum);
         let totalBurst = processes.reduce((acc, p) => acc + p.burstTime, 0);
@@ -92,8 +110,7 @@ const RoundRobinSimulator = () => {
 
             let process = queue.shift();
             let executionTime = process.executionTime;
-            let burstLeft = process.burstTime - executionTime;
-
+            
             const interval = setInterval(() => {
                 if (executionTime > 0) {
                     setCurrentTime((prev) => prev + 1);
@@ -112,7 +129,7 @@ const RoundRobinSimulator = () => {
                     clearInterval(interval);
                     executeProcess();
                 }
-            }, 500); // 🔥 실행 속도를 0.5초로 변경 (애니메이션 효과)
+            }, 500);
         };
 
         executeProcess();
