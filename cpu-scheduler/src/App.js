@@ -40,7 +40,7 @@ function App() {
         FIFO: FIFOSimulator,
         SJF: SJFSimulator,
         //STCF: STCFSimulator, 
-        //RR: RRSimulator,   
+        RR: RRSimulator,   
         //MLFQ: MLFQSimulator, 
     };
 

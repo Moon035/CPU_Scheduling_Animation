@@ -4,16 +4,19 @@ import PieChart from "./PieChart";
 
 
 const ChartContainer = ({ processes, executionProgress }) => {
+
+    const sortedProcesses = [...processes].sort((a,b) => a.id.localeCompare(b.id));
+
     return (
         <div style={styles.container}>
 
             <div style={styles.chartWrapper}>
-                <BarChart processes={processes} />
+                <BarChart processes={sortedProcesses} />
             </div>
 
 
             <div style={styles.chartWrapper}>
-                <PieChart processes={processes} executionProgress={executionProgress} />
+                <PieChart processes={sortedProcesses} executionProgress={executionProgress} />
             </div>
 
         </div>
