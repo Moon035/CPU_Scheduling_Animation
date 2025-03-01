@@ -41,7 +41,7 @@ function App() {
         SJF: SJFSimulator,
         //STCF: STCFSimulator, 
         RR: RRSimulator,   
-        //MLFQ: MLFQSimulator, 
+        MLFQ: MLFQSimulator, 
     };
 
 
