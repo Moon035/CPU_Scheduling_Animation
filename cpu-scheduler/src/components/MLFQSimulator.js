@@ -24,6 +24,46 @@ const MLFQSimulator = () => {
 
 
 
+
+    // Generate random process
+    const generateRandomProcesses = (count) => {
+        let newProcesses = Array.from({ length: count }, (_, i) => {
+            const processId = `P${i + 1}`;
+            return {
+                id: processId,
+                arrival: Math.floor(Math.random() * 6),
+                burstTime: Math.floor(Math.random() * 6) + 2,
+                initialBurst: 0,
+                color: getColorForProcess(processId),
+            };
+        });
+
+        // Align process in arrival order
+        newProcesses = newProcesses.sort((a, b) => a.arrival - b.arrival);
+
+        // Save initial burstTime
+        newProcesses = newProcesses.map((p) => ({ ...p, initialBurst: p.burstTime }));
+
+        setProcesses(newProcesses);
+    };
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
