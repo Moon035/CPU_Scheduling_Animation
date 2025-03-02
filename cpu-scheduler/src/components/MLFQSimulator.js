@@ -32,7 +32,7 @@ const MLFQSimulator = () => {
             return {
                 id: processId,
                 arrival: Math.floor(Math.random() * 6),
-                burstTime: Math.floor(Math.random() * 6) + 2,
+                burstTime: Math.floor(Math.random() * 6) + 8,
                 initialBurst: 0,
                 color: getColorForProcess(processId),
             };
@@ -50,8 +50,28 @@ const MLFQSimulator = () => {
 
 
 
+    //Setting priority queue, priority boosting
+    const assignQuantumAndBoosting = () => {
+        const q0_quantum = 1;
+        const q1_quantum = 2;
+        const q2_quantum = Math.floor(Math.random() * 3) + 8;
+        const priorityBoosting = 5;
+        setQueueQuantum({q0_quantum, q1_quantum, q2_quantum});
+        setPriorityBoosting(priorityBoosting);
+    };
+
+
 
     
+
+    
+
+
+
+
+
+    
+
 
 
 
