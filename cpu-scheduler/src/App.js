@@ -39,7 +39,7 @@ function App() {
     const simulators = {
         FIFO: FIFOSimulator,
         SJF: SJFSimulator,
-        //STCF: STCFSimulator, 
+        STCF: STCFSimulator, 
         RR: RRSimulator,   
         MLFQ: MLFQSimulator, 
     };
