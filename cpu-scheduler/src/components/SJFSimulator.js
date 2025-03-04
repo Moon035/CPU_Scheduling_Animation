@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import ChartContainer from "./ChartContainer";
 import Timer from "./Timer";
+import jsPDF from "jspdf";
 
 
 const SJFSimulator = () => {
@@ -19,6 +20,9 @@ const SJFSimulator = () => {
     
     //Array that store a list of processes to run
     const [processes, setProcesses] = useState([]);
+
+    
+    const [executionLogs, setExecutionLogs] = useState([]);
 
 
 
@@ -64,16 +68,10 @@ const SJFSimulator = () => {
         newProcesses = newProcesses.map((p) => ({ ...p, initialBurst: p.burstTime }));
 
         setProcesses(newProcesses);
+        setExecutionLogs([]); 
     };
 
 
-
-
-
-
-
-
-    // {Where the code is different from the FIFO}
 
     //Start SJF simulation
     const startSimulation = () => {
@@ -81,6 +79,7 @@ const SJFSimulator = () => {
         setIsRunning(true);
         setCurrentTime(0);
         setExecutionProgress(0);
+        setExecutionLogs([]); 
         runSJF();
     };
 
@@ -92,7 +91,7 @@ const SJFSimulator = () => {
 
 
 
-        //Create a process order list to execute        (just copy elementes from 'processes' for now)
+        //Create a process order list to execute        (just copy elements from 'processes' for now)
         let queue = [...processes];
 
 
@@ -134,14 +133,19 @@ const SJFSimulator = () => {
                     burstLeft--;
                     executedTime++;
 
-
-
                     setExecutionProgress((executedTime / totalBurst) * 100);
 
                     setProcesses((prevProcesses) =>
                         prevProcesses.map((p) =>
                             p.id === process.id ? {...p, burstTime:burstLeft, color:p.color}: p)
                     );
+
+                    // Record log for execution progress
+                    setExecutionLogs((prevLogs) => [
+                        ...prevLogs,
+                        `Time ${currentTime + 1}: Process ${process.id} executed (Remaining time: ${burstLeft})`,
+                    ]);
+
                 }
 
 
@@ -160,7 +164,17 @@ const SJFSimulator = () => {
     };
 
 
+    // // Save execution process log as pdf
+    const saveLogsAsPDF = () => {
+        const pdf = new jsPDF();
+        pdf.text("SJF Scheduling Execution Logs", 10, 10);
+        
+        executionLogs.forEach((log, index) => {
+            pdf.text(log, 10, 20 + index * 5);
+        });
 
+        pdf.save("SJF_Execution_Logs.pdf");
+    };
 
 
 
@@ -191,6 +205,10 @@ const SJFSimulator = () => {
                 style={styles.button}
             >
                 Start SJF Simulation
+            </button>
+
+            <button onClick={saveLogsAsPDF} style={styles.button}>
+                Download Execution Logs as PDF
             </button>
         </div>
     );
@@ -235,5 +253,3 @@ const styles = {
 };
 
 export default SJFSimulator;
-    
-
