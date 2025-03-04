@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ChartContainer from "./ChartContainer";
 import Timer from "./Timer";
-
-
+import jsPDF from "jspdf";
 
 const STCFSimulator = () => {
     const [isRunning, setIsRunning] = useState(false);
@@ -10,14 +9,10 @@ const STCFSimulator = () => {
     const [executionProgress, setExecutionProgress] = useState(0);
     const [numProcesses, setNumProcesses] = useState(3);
     const [processes, setProcesses] = useState([]);
-    const [readyQueue, setReadyQueue] = useState([]);
-    const [executionQueue, setExecutionQueue] = useState([]);
-
-
+    const [executionLogs, setExecutionLogs] = useState([]); // ✅ 실행 과정 로그 저장
 
     const colorMap = useRef({});
     const availableColors = ["red", "blue", "green", "orange", "purple", "cyan", "pink", "brown", "lime", "magenta"];
-
 
     //Color mapping
     const getColorForProcess = (id) => {
@@ -27,15 +22,18 @@ const STCFSimulator = () => {
         return colorMap.current[id];
     };
 
-    //Generate random processes
+    
+
+    // Generate random processes
     const generateRandomProcesses = (count) => {
         let newProcesses = Array.from({ length: count }, (_, i) => ({
             id: `P${i + 1}`,
-            arrival: Math.floor(Math.random() * 6), // assign random arrivalTime
-            burstTime: Math.floor(Math.random() * 6) + 2, // assign execution time randomly
+            arrival: Math.floor(Math.random() * 6),
+            burstTime: Math.floor(Math.random() * 6) + 2,
             initialBurst: 0,
             color: getColorForProcess(`P${i + 1}`),
         }));
+
 
         // Align processes in arrival order
         newProcesses.sort((a, b) => a.arrival - b.arrival);
@@ -44,23 +42,17 @@ const STCFSimulator = () => {
         newProcesses = newProcesses.map((p) => ({ ...p, initialBurst: p.burstTime }));
 
         setProcesses(newProcesses);
-        setExecutionProgress(0); //Initialize execution progress
-        setReadyQueue([]);
-        setExecutionQueue([]);
+        setExecutionProgress(0);
+        setExecutionLogs([]);
     };
 
-
-
-
-
-
-
-
+    
     const startSimulation = () => {
         if (isRunning) return;
         setIsRunning(true);
         setCurrentTime(0);
         setExecutionProgress(0);
+        setExecutionLogs([]);
 
 
         //Copy list of processes. add remainingTime property
@@ -73,7 +65,7 @@ const STCFSimulator = () => {
 
 
         let readyQueue = [];
-        let executionQueue = []; 
+        let executionQueue = [];
 
 
         //Repeated execution function that runs a particular task every second
@@ -86,12 +78,10 @@ const STCFSimulator = () => {
                 readyQueue.push(nextProcess);
             }
 
-            // Add process that has shortest burstTime into executionQueue 
+            // Add process that has shortest burstTime into executionQueue
             if (readyQueue.length > 0) {
                 readyQueue.sort((a, b) => {
-                    if (a.remainingTime !== b.remainingTime) {
-                        return a.remainingTime - b.remainingTime;
-                    }
+                    if (a.remainingTime !== b.remainingTime) return a.remainingTime - b.remainingTime;
                     return a.arrival - b.arrival;
                 });
 
@@ -102,17 +92,19 @@ const STCFSimulator = () => {
                 executedTime++;
                 time++;
 
-                // Update execution progress
+                //update execution progress
                 const totalBurst = processes.reduce((acc, p) => acc + p.initialBurst, 0);
                 setExecutionProgress((executedTime / totalBurst) * 100);
-
                 setProcesses((prevProcesses) =>
-                    prevProcesses.map((p) =>
-                        p.id === shortestJob.id ? { ...p, burstTime: shortestJob.remainingTime } : p
-                    )
+                    prevProcesses.map((p) => (p.id === shortestJob.id ? { ...p, burstTime: shortestJob.remainingTime } : p))
                 );
-
                 setCurrentTime(time);
+
+                // Record log for execution progress
+                setExecutionLogs((prevLogs) => [
+                    ...prevLogs,
+                    `Time ${time}: Process ${shortestJob.id} executed (Remaining time: ${shortestJob.remainingTime})`,
+                ]);
 
                 if (shortestJob.remainingTime > 0) {
                     readyQueue.push(shortestJob);
@@ -126,6 +118,18 @@ const STCFSimulator = () => {
                 setTimeout(() => setCurrentTime(0), 1000);
             }
         }, 1000);
+    };
+
+    // Save execution log as pdf
+    const saveLogsAsPDF = () => {
+        const pdf = new jsPDF();
+        pdf.text("STCF Scheduling Execution Logs", 10, 10);
+        
+        executionLogs.forEach((log, index) => {
+            pdf.text(log, 10, 20 + index * 5);
+        });
+
+        pdf.save("STCF_Execution_Logs.pdf");
     };
 
     return (
@@ -148,9 +152,14 @@ const STCFSimulator = () => {
                 </button>
             </div>
 
+            <button onClick={saveLogsAsPDF} style={styles.button}>
+                Download Execution Logs as PDF
+            </button>
+
             <button onClick={startSimulation} disabled={isRunning} style={styles.button}>
                 Start STCF Simulation
             </button>
+
         </div>
     );
 };
