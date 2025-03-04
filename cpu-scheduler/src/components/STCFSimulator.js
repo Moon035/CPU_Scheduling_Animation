@@ -128,7 +128,32 @@ const STCFSimulator = () => {
         }, 1000);
     };
 
-    
+    return (
+        <div style={styles.container}>
+            <Timer currentTime={currentTime} />
+            <ChartContainer processes={processes} executionProgress={executionProgress} />
+
+            <div style={styles.controls}>
+                <label style={styles.label}>Number of Processes: </label>
+                <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={numProcesses}
+                    onChange={(e) => setNumProcesses(Number(e.target.value))}
+                    style={styles.input}
+                />
+                <button onClick={() => generateRandomProcesses(numProcesses)} style={styles.generateButton}>
+                    Generate Processes
+                </button>
+            </div>
+
+            <button onClick={startSimulation} disabled={isRunning} style={styles.button}>
+                Start STCF Simulation
+            </button>
+        </div>
+    );
 };
+
 
 export default STCFSimulator;
