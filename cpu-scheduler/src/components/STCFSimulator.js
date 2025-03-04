@@ -86,13 +86,49 @@ const STCFSimulator = () => {
                 readyQueue.push(nextProcess);
             }
 
-            
+            // Add process that has shortest burstTime into executionQueue 
+            if (readyQueue.length > 0) {
+                readyQueue.sort((a, b) => {
+                    if (a.remainingTime !== b.remainingTime) {
+                        return a.remainingTime - b.remainingTime;
+                    }
+                    return a.arrival - b.arrival;
+                });
+
+                let shortestJob = readyQueue.shift();
+                executionQueue.push(shortestJob);
+
+                shortestJob.remainingTime -= 1;
+                executedTime++;
+                time++;
+
+                // Update execution progress
+                const totalBurst = processes.reduce((acc, p) => acc + p.initialBurst, 0);
+                setExecutionProgress((executedTime / totalBurst) * 100);
+
+                setProcesses((prevProcesses) =>
+                    prevProcesses.map((p) =>
+                        p.id === shortestJob.id ? { ...p, burstTime: shortestJob.remainingTime } : p
+                    )
+                );
+
+                setCurrentTime(time);
+
+                if (shortestJob.remainingTime > 0) {
+                    readyQueue.push(shortestJob);
+                }
+            }
+
+            // Terminate if all process are executed
+            if (readyQueue.length === 0 && processList.length === 0) {
+                clearInterval(interval);
+                setIsRunning(false);
+                setTimeout(() => setCurrentTime(0), 1000);
+            }
         }, 1000);
     };
 
     
 };
-
-
 
 export default STCFSimulator;
