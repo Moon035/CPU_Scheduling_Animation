@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import ChartContainer from "./ChartContainer";
 import Timer from "./Timer";
+import jsPDF from "jspdf";
 
 
 //Define Functional Component
@@ -21,6 +22,8 @@ const FIFOSimulator = () => {
     //Array that store a list of processes to run
     const [processes, setProcesses] = useState([]);
 
+    //Execution logs for PDF saving
+    const [executionLogs, setExecutionLogs] = useState([]);
 
 
     // Mapping process-specific colors
@@ -36,14 +39,10 @@ const FIFOSimulator = () => {
     };
 
 
-
     // Generate random process
     const generateRandomProcesses = (count) => {
 
-        
         let newProcesses = Array.from({ length: count }, (_, i) => {
-
-
             const processId = `P${i + 1}`;
 
             //Set arrival, burstTime randomly
@@ -56,7 +55,6 @@ const FIFOSimulator = () => {
             };
         });
 
-
         //Sort in ascending order based on arrival time
         newProcesses = newProcesses.sort((a, b) => a.arrival - b.arrival);
 
@@ -64,8 +62,8 @@ const FIFOSimulator = () => {
         newProcesses = newProcesses.map((p) => ({ ...p, initialBurst: p.burstTime }));
 
         setProcesses(newProcesses);
+        setExecutionLogs([]); 
     };
-
 
 
     //Start FIFO simulation
@@ -74,9 +72,9 @@ const FIFOSimulator = () => {
         setIsRunning(true);
         setCurrentTime(0);
         setExecutionProgress(0);
+        setExecutionLogs([]);
         runFIFO();
     };
-
 
 
     const runFIFO = () => {
@@ -109,6 +107,13 @@ const FIFOSimulator = () => {
                             p.id === process.id ? { ...p, burstTime: burstLeft, color: p.color } : p
                         )
                     );
+
+                    // Record log for execution progress
+                    setExecutionLogs((prevLogs) => [
+                        ...prevLogs,
+                        `Time ${currentTime + 1}: Process ${process.id} executed (Remaining time: ${burstLeft})`,
+                    ]);
+
                 } else {
                     clearInterval(interval);
                     executeProcess(index + 1);
@@ -120,6 +125,17 @@ const FIFOSimulator = () => {
     };
 
 
+    // Save execution log as pdf
+    const saveLogsAsPDF = () => {
+        const pdf = new jsPDF();
+        pdf.text("FIFO Scheduling Execution Logs", 10, 10);
+        
+        executionLogs.forEach((log, index) => {
+            pdf.text(log, 10, 20 + index * 5);
+        });
+
+        pdf.save("FIFO_Execution_Logs.pdf");
+    };
 
     
     return (
@@ -142,11 +158,11 @@ const FIFOSimulator = () => {
                 </button>
             </div>
 
-            <button
-                onClick={startSimulation}
-                disabled={isRunning}
-                style={styles.button}
-            >
+            <button onClick={saveLogsAsPDF} style={styles.button}>
+                Download Execution Logs as PDF
+            </button>
+
+            <button onClick={startSimulation} disabled={isRunning} style={styles.button}>
                 Start Simulation
             </button>
         </div>
