@@ -155,5 +155,13 @@ const STCFSimulator = () => {
     );
 };
 
+const styles = {
+    container: { textAlign: "center", marginTop: "20px" },
+    controls: { display: "flex", justifyContent: "center", alignItems: "center", marginTop: "15px", gap: "10px" },
+    label: { fontSize: "16px", fontWeight: "bold" },
+    input: { width: "60px", fontSize: "16px", padding: "5px", textAlign: "center" },
+    generateButton: { background: "#007BFF", color: "white", padding: "8px 16px", border: "none", borderRadius: "5px", cursor: "pointer", marginLeft: "10px" },
+    button: { background: "linear-gradient(135deg, #4CAF50, #2E8B57)", color: "white", fontSize: "18px", padding: "12px 24px", border: "none", borderRadius: "30px", cursor: "pointer", marginTop: "15px", transition: "all 0.3s ease-in-out" },
+};
 
 export default STCFSimulator;
