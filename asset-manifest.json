@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.ea4f91fd.css",
-    "main.js": "/static/js/main.3b7dc750.js",
-    "static/js/239.c9086849.chunk.js": "/static/js/239.c9086849.chunk.js",
-    "static/js/977.e463868d.chunk.js": "/static/js/977.e463868d.chunk.js",
-    "static/js/732.e10ad9d0.chunk.js": "/static/js/732.e10ad9d0.chunk.js",
-    "index.html": "/index.html",
-    "main.ea4f91fd.css.map": "/static/css/main.ea4f91fd.css.map",
-    "main.3b7dc750.js.map": "/static/js/main.3b7dc750.js.map",
-    "239.c9086849.chunk.js.map": "/static/js/239.c9086849.chunk.js.map",
-    "732.e10ad9d0.chunk.js.map": "/static/js/732.e10ad9d0.chunk.js.map"
+    "main.css": "/CPU_Scheduling_Animation/static/css/main.ea4f91fd.css",
+    "main.js": "/CPU_Scheduling_Animation/static/js/main.ce0a021a.js",
+    "static/js/239.c9086849.chunk.js": "/CPU_Scheduling_Animation/static/js/239.c9086849.chunk.js",
+    "static/js/977.e463868d.chunk.js": "/CPU_Scheduling_Animation/static/js/977.e463868d.chunk.js",
+    "static/js/732.e10ad9d0.chunk.js": "/CPU_Scheduling_Animation/static/js/732.e10ad9d0.chunk.js",
+    "index.html": "/CPU_Scheduling_Animation/index.html",
+    "main.ea4f91fd.css.map": "/CPU_Scheduling_Animation/static/css/main.ea4f91fd.css.map",
+    "main.ce0a021a.js.map": "/CPU_Scheduling_Animation/static/js/main.ce0a021a.js.map",
+    "239.c9086849.chunk.js.map": "/CPU_Scheduling_Animation/static/js/239.c9086849.chunk.js.map",
+    "732.e10ad9d0.chunk.js.map": "/CPU_Scheduling_Animation/static/js/732.e10ad9d0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ea4f91fd.css",
-    "static/js/main.3b7dc750.js"
+    "static/js/main.ce0a021a.js"
   ]
 }
